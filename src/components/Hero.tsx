@@ -21,7 +21,7 @@ const Hero = () => {
 
           {/* Sub Heading */}
           <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-3xl mx-auto leading-relaxed">
-            Atur sendiri porsi protein & karbohidratmu. Dijamin segar (dari peternakan kami) dan tersertifikasi keamanan pangan <strong className="text-foreground">HACCP & SLHS</strong>.
+            Atur sendiri porsi protein & karbohidratmu. Dijamin segar dan tersertifikasi keamanan pangan <strong className="text-foreground">HACCP & SLHS</strong>.
           </p>
 
           {/* CTA Button */}
