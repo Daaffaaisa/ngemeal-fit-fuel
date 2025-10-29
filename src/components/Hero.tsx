@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Award, CheckCircle2 } from "lucide-react";
-import logo from "@/assets/ngemeal-logo.jpg";
+import logo from "@/assets/logo.png";
 
 const Hero = () => {
   const scrollToOrder = () => {

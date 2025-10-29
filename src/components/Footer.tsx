@@ -1,5 +1,5 @@
 import { Instagram, Mail, Phone, MapPin } from "lucide-react";
-import logo from "@/assets/ngemeal-logo.jpg";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const scrollToSection = (id: string) => {
