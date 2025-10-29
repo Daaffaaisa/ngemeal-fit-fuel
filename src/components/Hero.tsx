@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Award, CheckCircle2 } from "lucide-react";
+import logo from "@/assets/ngemeal-logo.jpg";
 
 const Hero = () => {
   const scrollToOrder = () => {
@@ -13,6 +14,15 @@ const Hero = () => {
     <section id="hero" className="gradient-hero py-16 md:py-24 lg:py-32">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center animate-fade-in">
+          {/* Logo */}
+          <div className="mb-8 flex justify-center">
+            <img 
+              src={logo} 
+              alt="NgeMeal Logo" 
+              className="h-32 md:h-40 w-auto opacity-90 mix-blend-multiply dark:mix-blend-screen"
+            />
+          </div>
+          
           {/* Main Heading */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
             Makanan Sehat Presisi <br className="hidden md:block" />
