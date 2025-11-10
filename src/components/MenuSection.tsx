@@ -1,79 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "./ProductCard";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+interface Product {
+  id: string;
+  name: string;
+  image_url: string;
+  base_calories: number;
+  base_protein: number;
+  base_carbs: number;
+  base_fats: number;
+  base_price: number;
+  category: string;
+}
 
 const MenuSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const categories = [
     { id: "all", label: "Semua" },
-    { id: "bulking", label: "Bulking" },
-    { id: "cutting", label: "Cutting" },
-    { id: "maintenance", label: "Maintenance" },
+    { id: "High Protein", label: "High Protein" },
+    { id: "Low Carb", label: "Low Carb" },
+    { id: "Balanced", label: "Balanced" },
   ];
 
-  const products = [
-    {
-      name: "Grilled Chicken Breast with Quinoa",
-      image: "https://placehold.co/600x400/28A745/FFFFFF?text=Grilled+Chicken",
-      calories: 450,
-      protein: 40,
-      carbs: 30,
-      fats: 18,
-      price: 50000,
-      category: "cutting",
-    },
-    {
-      name: "Beef Bulgogi with Brown Rice",
-      image: "https://placehold.co/600x400/28A745/FFFFFF?text=Beef+Bulgogi",
-      calories: 620,
-      protein: 48,
-      carbs: 55,
-      fats: 22,
-      price: 65000,
-      category: "bulking",
-    },
-    {
-      name: "Salmon Teriyaki with Edamame",
-      image: "https://placehold.co/600x400/28A745/FFFFFF?text=Salmon+Teriyaki",
-      calories: 480,
-      protein: 38,
-      carbs: 35,
-      fats: 20,
-      price: 75000,
-      category: "maintenance",
-    },
-    {
-      name: "Turkey Meatballs with Sweet Potato",
-      image: "https://placehold.co/600x400/28A745/FFFFFF?text=Turkey+Meatballs",
-      calories: 520,
-      protein: 42,
-      carbs: 45,
-      fats: 16,
-      price: 55000,
-      category: "maintenance",
-    },
-    {
-      name: "Grilled Tofu with Vegetables",
-      image: "https://placehold.co/600x400/28A745/FFFFFF?text=Grilled+Tofu",
-      calories: 350,
-      protein: 25,
-      carbs: 28,
-      fats: 14,
-      price: 45000,
-      category: "cutting",
-    },
-    {
-      name: "Chicken Katsu with Rice",
-      image: "https://placehold.co/600x400/28A745/FFFFFF?text=Chicken+Katsu",
-      calories: 680,
-      protein: 52,
-      carbs: 62,
-      fats: 24,
-      price: 60000,
-      category: "bulking",
-    },
-  ];
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_active', true);
+
+    if (error) {
+      toast.error('Gagal memuat produk');
+      console.error(error);
+    } else {
+      setProducts(data || []);
+    }
+    setLoading(false);
+  };
 
   const filteredProducts = selectedCategory === "all" 
     ? products 
@@ -107,9 +80,30 @@ const MenuSection = () => {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product, index) => (
-            <ProductCard key={index} {...product} />
-          ))}
+          {loading ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-muted-foreground">Memuat produk...</p>
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="col-span-full text-center py-12">
+              <p className="text-muted-foreground">Tidak ada produk tersedia</p>
+            </div>
+          ) : (
+            filteredProducts.map((product) => (
+              <ProductCard 
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                image={product.image_url}
+                calories={product.base_calories}
+                protein={product.base_protein}
+                carbs={product.base_carbs}
+                fats={product.base_fats}
+                price={product.base_price}
+                category={product.category}
+              />
+            ))
+          )}
         </div>
       </div>
     </section>

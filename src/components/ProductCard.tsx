@@ -2,8 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Settings } from "lucide-react";
 import CustomizationModal from "./CustomizationModal";
+import { useCart } from "@/hooks/useCart";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProductCardProps {
+  id: string;
   name: string;
   image: string;
   calories: number;
@@ -14,8 +18,28 @@ interface ProductCardProps {
   category: string;
 }
 
-const ProductCard = ({ name, image, calories, protein, carbs, fats, price, category }: ProductCardProps) => {
+const ProductCard = ({ id, name, image, calories, protein, carbs, fats, price, category }: ProductCardProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { addToCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleQuickAdd = () => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    // Add with default portions (150g protein, 100g carbs)
+    addToCart(id, name, 150, 100, price);
+  };
+
+  const handleCustomAdd = (proteinGrams: number, carbGrams: number, finalPrice: number) => {
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+    addToCart(id, name, proteinGrams, carbGrams, finalPrice);
+  };
 
   return (
     <>
@@ -51,6 +75,7 @@ const ProductCard = ({ name, image, calories, protein, carbs, fats, price, categ
             <Button 
               variant="outline" 
               className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              onClick={handleQuickAdd}
             >
               <ShoppingCart className="h-4 w-4 mr-2" />
               Tambah
@@ -69,12 +94,14 @@ const ProductCard = ({ name, image, calories, protein, carbs, fats, price, categ
       <CustomizationModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        productId={id}
         productName={name}
         basePrice={price}
         baseCalories={calories}
         baseProtein={protein}
         baseCarbs={carbs}
         baseFats={fats}
+        onAddToCart={handleCustomAdd}
       />
     </>
   );

@@ -8,23 +8,27 @@ import { ShoppingCart } from "lucide-react";
 interface CustomizationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  productId: string;
   productName: string;
   basePrice: number;
   baseCalories: number;
   baseProtein: number;
   baseCarbs: number;
   baseFats: number;
+  onAddToCart: (proteinGrams: number, carbGrams: number, price: number) => void;
 }
 
 const CustomizationModal = ({
   isOpen,
   onClose,
+  productId,
   productName,
   basePrice,
   baseCalories,
   baseProtein,
   baseCarbs,
   baseFats,
+  onAddToCart,
 }: CustomizationModalProps) => {
   // Slider ranges: Protein 100-300g, Carbs 50-200g
   const [proteinGrams, setProteinGrams] = useState([150]);
@@ -169,6 +173,10 @@ const CustomizationModal = ({
           <Button 
             className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
             size="lg"
+            onClick={() => {
+              onAddToCart(proteinGrams[0], carbGrams[0], totalPrice);
+              onClose();
+            }}
           >
             <ShoppingCart className="h-5 w-5 mr-2" />
             Tambahkan ke Keranjang
