@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Slider } from "@/components/ui/slider";
 import { ShoppingCart } from "lucide-react";
 
 interface CustomizationModalProps {
@@ -26,46 +26,64 @@ const CustomizationModal = ({
   baseCarbs,
   baseFats,
 }: CustomizationModalProps) => {
-  const [proteinSize, setProteinSize] = useState("150");
-  const [carbSize, setCarbSize] = useState("100");
+  // Slider ranges: Protein 100-300g, Carbs 50-200g
+  const [proteinGrams, setProteinGrams] = useState([150]);
+  const [carbGrams, setCarbGrams] = useState([100]);
   const [totalPrice, setTotalPrice] = useState(basePrice);
   const [totalCalories, setTotalCalories] = useState(baseCalories);
   const [totalProtein, setTotalProtein] = useState(baseProtein);
   const [totalCarbs, setTotalCarbs] = useState(baseCarbs);
 
-  const proteinOptions = [
-    { value: "100", label: "100g", priceAdd: 0, proteinAdd: -13 },
-    { value: "150", label: "150g (Standar)", priceAdd: 0, proteinAdd: 0 },
-    { value: "200", label: "200g", priceAdd: 10000, proteinAdd: 13 },
-    { value: "250", label: "250g", priceAdd: 20000, proteinAdd: 27 },
-  ];
-
-  const carbOptions = [
-    { value: "50", label: "50g (Low-Carb)", priceAdd: 0, carbAdd: -50 },
-    { value: "100", label: "100g (Standar)", priceAdd: 0, carbAdd: 0 },
-    { value: "150", label: "150g", priceAdd: 5000, carbAdd: 50 },
-  ];
+  // Pricing: Rp 200/g for protein above 150g, Rp 100/g for carbs above 100g
+  const calculatePrice = (protein: number, carbs: number) => {
+    let price = basePrice;
+    
+    // Protein pricing
+    if (protein > 150) {
+      price += (protein - 150) * 200;
+    } else if (protein < 150) {
+      price -= (150 - protein) * 200;
+    }
+    
+    // Carbs pricing
+    if (carbs > 100) {
+      price += (carbs - 100) * 100;
+    } else if (carbs < 100) {
+      price -= (100 - carbs) * 100;
+    }
+    
+    return price;
+  };
 
   useEffect(() => {
-    const selectedProtein = proteinOptions.find(opt => opt.value === proteinSize);
-    const selectedCarb = carbOptions.find(opt => opt.value === carbSize);
-
-    if (selectedProtein && selectedCarb) {
-      const newPrice = basePrice + selectedProtein.priceAdd + selectedCarb.priceAdd;
-      const newProtein = baseProtein + selectedProtein.proteinAdd;
-      const newCarbs = baseCarbs + selectedCarb.carbAdd;
-      
-      // Rough calorie calculation: protein = 4 cal/g, carbs = 4 cal/g
-      const proteinCals = selectedProtein.proteinAdd * 4;
-      const carbCals = selectedCarb.carbAdd * 4;
-      const newCalories = baseCalories + proteinCals + carbCals;
-
-      setTotalPrice(newPrice);
-      setTotalCalories(newCalories);
-      setTotalProtein(newProtein);
-      setTotalCarbs(newCarbs);
-    }
-  }, [proteinSize, carbSize]);
+    const protein = proteinGrams[0];
+    const carbs = carbGrams[0];
+    
+    // Calculate price
+    const newPrice = calculatePrice(protein, carbs);
+    
+    // Calculate macros (approximate)
+    // Protein gram difference from base (150g standard)
+    const proteinDiff = protein - 150;
+    const proteinMacroDiff = Math.round(proteinDiff * 0.26); // ~26% protein content in meat
+    
+    // Carbs gram difference from base (100g standard)
+    const carbDiff = carbs - 100;
+    const carbMacroDiff = Math.round(carbDiff * 1); // Rice is mostly carbs
+    
+    const newProtein = baseProtein + proteinMacroDiff;
+    const newCarbs = baseCarbs + carbMacroDiff;
+    
+    // Calorie calculation: protein = 4 cal/g, carbs = 4 cal/g
+    const proteinCals = proteinMacroDiff * 4;
+    const carbCals = carbMacroDiff * 4;
+    const newCalories = baseCalories + proteinCals + carbCals;
+    
+    setTotalPrice(newPrice);
+    setTotalCalories(newCalories);
+    setTotalProtein(newProtein);
+    setTotalCarbs(newCarbs);
+  }, [proteinGrams, carbGrams]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -80,44 +98,50 @@ const CustomizationModal = ({
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* Protein Selection */}
-          <div>
-            <Label className="text-base font-semibold text-foreground mb-3 block">
-              Pilih Porsi Protein
-            </Label>
-            <RadioGroup value={proteinSize} onValueChange={setProteinSize}>
-              {proteinOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2 p-3 rounded-lg hover:bg-secondary transition-smooth border border-transparent hover:border-primary">
-                  <RadioGroupItem value={option.value} id={`protein-${option.value}`} />
-                  <Label htmlFor={`protein-${option.value}`} className="flex-1 cursor-pointer">
-                    {option.label}
-                    {option.priceAdd > 0 && (
-                      <span className="text-accent ml-2">+Rp {option.priceAdd.toLocaleString('id-ID')}</span>
-                    )}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+          {/* Protein Slider */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <Label className="text-base font-semibold text-foreground">
+                Porsi Protein
+              </Label>
+              <span className="text-lg font-bold text-primary">{proteinGrams[0]}g</span>
+            </div>
+            <Slider
+              value={proteinGrams}
+              onValueChange={setProteinGrams}
+              min={100}
+              max={300}
+              step={10}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>100g</span>
+              <span>150g (Standar)</span>
+              <span>300g</span>
+            </div>
           </div>
 
-          {/* Carbs Selection */}
-          <div>
-            <Label className="text-base font-semibold text-foreground mb-3 block">
-              Pilih Porsi Karbohidrat
-            </Label>
-            <RadioGroup value={carbSize} onValueChange={setCarbSize}>
-              {carbOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2 p-3 rounded-lg hover:bg-secondary transition-smooth border border-transparent hover:border-primary">
-                  <RadioGroupItem value={option.value} id={`carb-${option.value}`} />
-                  <Label htmlFor={`carb-${option.value}`} className="flex-1 cursor-pointer">
-                    {option.label}
-                    {option.priceAdd > 0 && (
-                      <span className="text-accent ml-2">+Rp {option.priceAdd.toLocaleString('id-ID')}</span>
-                    )}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+          {/* Carbs Slider */}
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <Label className="text-base font-semibold text-foreground">
+                Porsi Karbohidrat
+              </Label>
+              <span className="text-lg font-bold text-primary">{carbGrams[0]}g</span>
+            </div>
+            <Slider
+              value={carbGrams}
+              onValueChange={setCarbGrams}
+              min={50}
+              max={200}
+              step={10}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>50g (Low-Carb)</span>
+              <span>100g (Standar)</span>
+              <span>200g</span>
+            </div>
           </div>
 
           {/* Live Calculation Display */}
