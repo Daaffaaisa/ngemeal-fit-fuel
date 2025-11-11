@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { ShoppingCart, Menu, X, LogOut, User } from "lucide-react";
+import { ShoppingCart, Menu, X, LogOut, User, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/hooks/useCart";
+import { useUserRole } from "@/hooks/useUserRole";
 import AuthModal from "@/components/AuthModal";
 import logo from "@/assets/logo.png";
 
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { totalItems } = useCart();
+  const { isAdmin } = useUserRole();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +67,12 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
+                {isAdmin && (
+                  <Button variant="outline" onClick={() => navigate('/admin')}>
+                    <Shield className="h-4 w-4 mr-2" />
+                    Admin
+                  </Button>
+                )}
                 <Button variant="ghost" size="icon" className="relative" onClick={() => navigate('/cart')}>
                   <ShoppingCart className="h-5 w-5" />
                   {totalItems > 0 && (
@@ -118,10 +126,18 @@ const Navbar = () => {
                 FAQ
               </button>
               {user ? (
-                <Button variant="outline" className="w-full" onClick={() => { signOut(); setMobileMenuOpen(false); }}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </Button>
+                <>
+                  {isAdmin && (
+                    <Button variant="outline" className="w-full" onClick={() => { navigate('/admin'); setMobileMenuOpen(false); }}>
+                      <Shield className="h-4 w-4 mr-2" />
+                      Admin Dashboard
+                    </Button>
+                  )}
+                  <Button variant="outline" className="w-full" onClick={() => { signOut(); setMobileMenuOpen(false); }}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
               ) : (
                 <Button className="w-full" onClick={() => { setAuthModalOpen(true); setMobileMenuOpen(false); }}>
                   <User className="h-4 w-4 mr-2" />
