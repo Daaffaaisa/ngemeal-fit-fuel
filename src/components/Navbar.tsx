@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/hooks/useCart";
+import AuthModal from "@/components/AuthModal";
 import logo from "@/assets/logo.png";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { totalItems } = useCart();
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ const Navbar = () => {
                 </Button>
               </>
             ) : (
-              <Button onClick={() => navigate('/auth')}>
+              <Button onClick={() => setAuthModalOpen(true)}>
                 <User className="h-4 w-4 mr-2" />
                 Login
               </Button>
@@ -121,7 +123,7 @@ const Navbar = () => {
                   Logout
                 </Button>
               ) : (
-                <Button className="w-full" onClick={() => { navigate('/auth'); setMobileMenuOpen(false); }}>
+                <Button className="w-full" onClick={() => { setAuthModalOpen(true); setMobileMenuOpen(false); }}>
                   <User className="h-4 w-4 mr-2" />
                   Login
                 </Button>
@@ -130,6 +132,7 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </nav>
   );
 };
