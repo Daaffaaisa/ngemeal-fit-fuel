@@ -34,6 +34,11 @@ const Hero = () => {
             Atur sendiri porsi protein & karbohidratmu. Dijamin segar dan tersertifikasi keamanan pangan <strong className="text-foreground">HACCP & SLHS</strong>.
           </p>
 
+          {/* Sub Heading */}
+          <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-3xl mx-auto leading-relaxed">
+            Atur sendiri porsi protein & karbohidratmu. Dijamin segar dan tersertifikasi keamanan pangan <strong className="text-foreground">HACCP & SLHS</strong>.
+          </p>
+
           {/* CTA Button */}
           <div className="mb-8 md:mb-12">
             <Button 

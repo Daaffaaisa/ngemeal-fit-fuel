@@ -21,7 +21,7 @@ const Footer = () => {
               Dari peternakan kami ke meja Anda.
             </p>
             <div className="flex gap-4">
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-smooth">
+              <a href="https://instagram.com/ngemeal.lab?igsh=MWQ2dmJIMzk1eWJwZA==" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-smooth">
                 <Instagram className="h-6 w-6" />
               </a>
               <a href="mailto:info@ngemeal.com" className="text-muted-foreground hover:text-primary transition-smooth">
@@ -63,15 +63,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-muted-foreground">
                 <Phone className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                <span>+62 812-3456-7890</span>
+                <span>+62 859 5138 0342</span>
               </li>
               <li className="flex items-start gap-2 text-muted-foreground">
                 <Mail className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                <span>info@ngemeal.com</span>
+                <span>111202214776@dinus.mhs.ac.id</span>
               </li>
               <li className="flex items-start gap-2 text-muted-foreground">
                 <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0" />
-                <span>Jakarta, Indonesia</span>
+                <span>Semarang, Indonesia</span>
               </li>
             </ul>
           </div>
