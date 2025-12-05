@@ -1,4 +1,9 @@
 import { ShieldCheck, Leaf, Users } from "lucide-react";
+import haccpCertificate from "@/assets/guarantee/haccp-certificate.jpg";
+import slhsCertificate from "@/assets/guarantee/slhs-certificate.jpg";
+import industrialKitchen from "@/assets/guarantee/industrial-kitchen.jpg";
+import professionalStaff from "@/assets/guarantee/professional-staff.jpg";
+import chickenFarm from "@/assets/guarantee/chicken-farm.jpg";
 
 const GuaranteeSection = () => {
   return (
@@ -26,9 +31,9 @@ const GuaranteeSection = () => {
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               <div className="bg-secondary/50 p-6 rounded-xl">
                 <img 
-                  src="https://placehold.co/400x300/E2E8F0/333?text=HACCP+Certificate" 
+                  src={haccpCertificate} 
                   alt="Sertifikat HACCP"
-                  className="w-full rounded-lg mb-4"
+                  className="w-full h-48 object-cover rounded-lg mb-4"
                 />
                 <h4 className="font-semibold text-foreground mb-2">HACCP Certified</h4>
                 <p className="text-sm text-muted-foreground">
@@ -38,9 +43,9 @@ const GuaranteeSection = () => {
               
               <div className="bg-secondary/50 p-6 rounded-xl">
                 <img 
-                  src="https://placehold.co/400x300/E2E8F0/333?text=SLHS+Certificate" 
+                  src={slhsCertificate} 
                   alt="Sertifikat SLHS"
-                  className="w-full rounded-lg mb-4"
+                  className="w-full h-48 object-cover rounded-lg mb-4"
                 />
                 <h4 className="font-semibold text-foreground mb-2">SLHS Certified</h4>
                 <p className="text-sm text-muted-foreground">
@@ -51,14 +56,14 @@ const GuaranteeSection = () => {
 
             <div className="grid md:grid-cols-2 gap-6">
               <img 
-                src="https://placehold.co/600x400/E2E8F0/333?text=Dapur+Standar+Industri" 
+                src={industrialKitchen} 
                 alt="Dapur Standar Industri"
-                className="w-full rounded-xl"
+                className="w-full h-64 object-cover rounded-xl"
               />
               <img 
-                src="https://placehold.co/600x400/E2E8F0/333?text=Staf+Profesional" 
+                src={professionalStaff} 
                 alt="Staf Profesional"
-                className="w-full rounded-xl"
+                className="w-full h-64 object-cover rounded-xl"
               />
             </div>
           </div>
@@ -81,9 +86,9 @@ const GuaranteeSection = () => {
             </p>
             
             <img 
-              src="https://placehold.co/1200x500/E2E8F0/333?text=Peternakan+Ayam+NgeMeal" 
+              src={chickenFarm} 
               alt="Peternakan Ayam"
-              className="w-full rounded-xl"
+              className="w-full h-80 object-cover rounded-xl"
             />
           </div>
         </div>
@@ -108,7 +113,7 @@ const GuaranteeSection = () => {
                 <img 
                   src="https://placehold.co/150x150/28A745/FFFFFF?text=Ahli+Gizi" 
                   alt="Ahli Gizi"
-                  className="w-24 h-24 rounded-full"
+                  className="w-24 h-24 rounded-full object-cover"
                 />
                 <div>
                   <h4 className="font-semibold text-foreground mb-1">Dr. Sarah Nutrition, S.Gz</h4>
@@ -123,7 +128,7 @@ const GuaranteeSection = () => {
                 <img 
                   src="https://placehold.co/150x150/28A745/FFFFFF?text=Food+Safety" 
                   alt="Food Safety Supervisor"
-                  className="w-24 h-24 rounded-full"
+                  className="w-24 h-24 rounded-full object-cover"
                 />
                 <div>
                   <h4 className="font-semibold text-foreground mb-1">Ahmad Foodsafe, S.TP</h4>
